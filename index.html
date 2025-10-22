@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Solar Dash ☀️</title>
 
-<!-- Open Graph for LinkedIn preview -->
+<!-- Social preview for LinkedIn -->
 <meta property="og:title" content="Solar Dash — Solar-Powered Arcade Game" />
-<meta property="og:description" content="Collect sunlight, dodge clouds, and keep your energy up in this climate-inspired mini game." />
+<meta property="og:description" content="Collect sunlight, dodge clouds, and keep your battery charged!" />
 <meta property="og:image" content="https://raw.githubusercontent.com/jeanmhuang/SolarDash/main/thumbnail.png" />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://jeanmhuang.github.io/SolarDash/" />
@@ -18,142 +18,104 @@
     --accent:#22c55e; --warn:#f59e0b;
   }
   *{box-sizing:border-box}
-  body {
+  body{
     margin:0;
-    font-family: system-ui, -apple-system, Segoe UI, Roboto, Inter, Helvetica, Arial;
+    font-family: system-ui,-apple-system,Segoe UI,Roboto,Inter,Helvetica,Arial;
     color:var(--fg);
     background:linear-gradient(180deg,#e0f7ff,#f8fcff);
+    overflow-x:hidden;
   }
-  header {
+  header{
     display:flex; flex-wrap:wrap; align-items:center; gap:10px;
-    padding:10px 14px; background:#fff;
-    border-bottom:1px solid #dbeafe; position:sticky; top:0; z-index:10;
+    padding:10px 14px;
+    background:#fff;
+    border-bottom:1px solid #dbeafe;
+    position:sticky; top:0; z-index:10;
   }
-  header h1 { font-size:22px; margin:0; flex:1; }
-  header div.desc { font-size:14px; color:#475569; flex-basis:100%; }
-
-  .wrap {
-    display:grid;
-    grid-template-columns: minmax(250px,300px) 1fr;
-    gap:14px;
-    padding:12px;
+  header h1{margin:0;font-size:22px;flex:1;}
+  header .desc{font-size:14px;color:#475569;flex-basis:100%;}
+  #wrap{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding:14px;
   }
-  aside, main {
-    background:var(--panel);
-    border:1px solid #dbeafe;
-    border-radius:12px;
-    padding:12px;
-    box-shadow:0 6px 16px rgba(0,0,0,.05);
-  }
-
-  canvas {
+  canvas{
     width:100%;
     max-width:900px;
-    height:auto;
     aspect-ratio:16/9;
-    border-radius:12px;
-    border:1px solid #e5eef7;
     background:#bfe9ff;
+    border:1px solid #dbeafe;
+    border-radius:12px;
     display:block;
     touch-action:none;
   }
-
-  .kpi {
+  .hud{
+    margin-top:8px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    justify-content:center;
+    font-size:15px;
+  }
+  .pill{
+    background:#f1f7ff;
+    border:1px solid #e1ecfb;
+    border-radius:999px;
+    padding:6px 10px;
+  }
+  .bar{
+    height:14px;
+    background:#ecf3ff;
+    border-radius:999px;
+    overflow:hidden;
+    width:120px;
+  }
+  .fill{
+    height:100%;
+    background:linear-gradient(90deg,#fde047,#f59e0b);
+    width:60%;
+    transition:width .2s ease;
+  }
+  .controls{
+    margin-top:10px;
     display:flex;
     flex-wrap:wrap;
     gap:8px;
-    margin:8px 0;
+    justify-content:center;
   }
-  .pill {
-    background:#f1f7ff;
-    border:1px solid #e1ecfb;
-    padding:6px 10px;
-    border-radius:999px;
-    font-size:14px;
-  }
-  .bar {
-    height:14px; background:#ecf3ff;
-    border-radius:999px; overflow:hidden;
-  }
-  .fill {
-    height:100%;
-    background:linear-gradient(90deg,#fde047,#f59e0b);
-    transition:width .2s ease-out;
-  }
-  .btn {
+  .btn{
     background:#0ea5e9;
     color:#fff;
     border:0;
     border-radius:10px;
-    padding:10px 14px;
+    padding:10px 16px;
     cursor:pointer;
     font-size:15px;
   }
-  .btn.alt { background:#22c55e; }
-  .row {
-    display:flex;
-    flex-wrap:wrap;
-    gap:8px;
-    margin-top:10px;
-  }
-  details { margin-top:10px; font-size:14px; }
-  summary { cursor:pointer; font-weight:600; }
-
-  /* --- MOBILE --- */
-  @media (max-width:768px){
-    .wrap {
-      grid-template-columns: 1fr;
-    }
-    aside { order:2; }
-    main { order:1; }
-    header h1 { font-size:20px; }
-    .btn { flex:1; font-size:16px; padding:12px 0; }
-    .pill { font-size:15px; }
-    summary { font-size:16px; }
+  .btn.alt{background:#22c55e;}
+  @media(max-width:700px){
+    .btn{flex:1;font-size:16px;padding:12px 0;}
   }
 </style>
 </head>
 <body>
-
 <header>
   <h1>☀️ Solar Dash</h1>
-  <div class="desc">Collect suns, avoid clouds, and keep your battery charged!</div>
+  <div class="desc">Collect suns, dodge clouds, and keep your battery charged!</div>
 </header>
 
-<div class="wrap">
-  <aside>
-    <div class="kpi">
-      <div class="pill">Score: <b id="kScore">0</b></div>
-      <div class="pill">Best: <b id="kBest">0</b></div>
-      <div class="pill">Speed: <b id="kSpeed">1.0x</b></div>
-    </div>
-    <div>
-      <div>Battery</div>
-      <div class="bar"><div id="batteryFill" class="fill" style="width:60%"></div></div>
-    </div>
-    <div class="row">
-      <button id="btnStart" class="btn alt">Start</button>
-      <button id="btnPause" class="btn">Pause</button>
-      <button id="btnRestart" class="btn">Restart</button>
-    </div>
-    <details open>
-      <summary>Facts represented</summary>
-      <ul>
-        <li><b>Solar irradiance:</b> More sunlight = more PV power.</li>
-        <li><b>Cloud attenuation:</b> Clouds scatter & absorb light, lowering input.</li>
-        <li><b>Energy balance:</b> Battery rises with input, falls with load demand.</li>
-        <li><b>Velocity drag:</b> Aerodynamic losses ∝ v², power ∝ v³.</li>
-        <li><b>Frictional losses:</b> Slick surfaces cut traction & efficiency.</li>
-      </ul>
-    </details>
-  </aside>
+<div id="wrap">
+  <canvas id="game"></canvas>
 
-  <main>
-    <canvas id="game" width="900" height="480"></canvas>
-  </main>
-</div>
+  <div class="hud">
+    <div class="pill">Score: <b id="score">0</b></div>
+    <div class="pill">Best: <b id="best">0</b></div>
+    <div class="pill">Speed: <b id="speed">1.0x</b></div>
+    <div class="bar"><div class="fill" id="bat"></div></div>
+  </div>
 
-<script src="game.js"></script>
-</body>
-</html>
+  <div class="controls">
+    <button class="btn alt" id="start">Start</button>
+    <button class="btn" id="pa
 
