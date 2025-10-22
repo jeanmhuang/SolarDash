@@ -1,37 +1,45 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Solar Dash — HTML Arcade</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Solar Dash ☀️</title>
+
+<!-- Open Graph meta for LinkedIn / social preview -->
+<meta property="og:title" content="Solar Dash — Solar-Powered Arcade Game" />
+<meta property="og:description" content="Collect sunlight, dodge clouds, and keep your energy up in this climate-inspired mini game." />
+<meta property="og:image" content="https://github.com/jeanmhuang/SolarDash/blob/main/thumbnail.png?raw=true" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://jeanmhuang.github.io/SolarDash/" />
+
 <style>
-  :root{--ink:#0b1020;--bg:#f4fbff;--fg:#0b1020;--panel:#ffffff;--accent:#22c55e;--warn:#f59e0b;--bad:#ef4444}
+  :root{--bg:#f4fbff;--fg:#0b1020;--panel:#fff;--accent:#22c55e;--warn:#f59e0b}
   *{box-sizing:border-box}
-  html,body{height:100%}
-  body{margin:0;background:linear-gradient(180deg,#e9f7ff,#f8fbff);font:16px/1.4 system-ui,Segoe UI,Roboto,Inter,Helvetica,Arial;color:var(--fg)}
-  header{display:flex;align-items:center;gap:10px;padding:10px 14px;background:#fff;border-bottom:1px solid #e5eef7;position:sticky;top:0;z-index:10}
-  header h1{font-size:18px;margin:0}
-  .wrap{display:grid;grid-template-columns:minmax(260px,320px) 1fr;gap:16px;padding:12px}
-  aside{background:var(--panel);border:1px solid #e5eef7;border-radius:14px;padding:12px;box-shadow:0 6px 24px rgba(0,0,0,.05)}
-  main{background:var(--panel);border:1px solid #e5eef7;border-radius:14px;padding:12px;box-shadow:0 6px 24px rgba(0,0,0,.05)}
-  canvas{width:100%;max-width:900px;height:480px;border:1px solid #e5eef7;border-radius:12px;background:#bfe9ff;display:block}
-  .kpi{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0}
+  body{margin:0;background:linear-gradient(180deg,#e0f7ff,#f8fcff);font-family:system-ui,Segoe UI,Roboto,Inter,Helvetica,Arial;color:var(--fg)}
+  header{display:flex;align-items:center;gap:10px;padding:10px 14px;background:#fff;border-bottom:1px solid #dbeafe;position:sticky;top:0;z-index:10}
+  header h1{font-size:20px;margin:0}
+  .wrap{display:grid;grid-template-columns:280px 1fr;gap:14px;padding:12px}
+  aside{background:var(--panel);border:1px solid #dbeafe;border-radius:12px;padding:12px;box-shadow:0 6px 16px rgba(0,0,0,.05)}
+  main{background:var(--panel);border:1px solid #dbeafe;border-radius:12px;padding:12px;box-shadow:0 6px 16px rgba(0,0,0,.05)}
+  canvas{width:100%;max-width:900px;height:480px;border-radius:12px;border:1px solid #e5eef7;background:#bfe9ff;display:block}
+  .kpi{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
   .pill{background:#f1f7ff;border:1px solid #e1ecfb;padding:6px 10px;border-radius:999px;font-size:13px}
-  .btn{background:#0ea5e9;color:#fff;border:0;border-radius:10px;padding:9px 12px;cursor:pointer;box-shadow:0 6px 16px rgba(14,165,233,.25)}
+  .bar{height:12px;background:#ecf3ff;border-radius:999px;overflow:hidden}
+  .fill{height:100%;background:linear-gradient(90deg,#fde047,#f59e0b);transition:width .2s ease-out}
+  .btn{background:#0ea5e9;color:#fff;border:0;border-radius:10px;padding:9px 12px;cursor:pointer}
   .btn.alt{background:#22c55e}
   .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-  .hint{font-size:13px;color:#5b6a85}
-  .bar{height:12px;background:#ecf3ff;border-radius:999px;overflow:hidden}
-  .fill{height:100%;background:linear-gradient(90deg,#fde047,#f59e0b);width:50%;transition:width .2s ease-out}
   ul{margin:8px 0 0 18px}
   li{margin:2px 0}
 </style>
 </head>
 <body>
+
 <header>
   <h1>☀️ Solar Dash</h1>
-  <div class="hint">Collect sun tokens to keep your battery charged; dodge clouds and oil slicks. Arrow keys / WASD. Mobile: touch & drag.</div>
+  <div>Collect suns, avoid clouds, and keep your battery charged!</div>
 </header>
+
 <div class="wrap">
   <aside>
     <div class="kpi">
@@ -49,237 +57,72 @@
       <button id="btnRestart" class="btn">Restart</button>
     </div>
     <details style="margin-top:10px" open>
-      <summary><b>How to play</b></summary>
-      <ul>
-        <li>Collect suns to increase charge and score.</li>
-        <li>Cloud contact reduces charge; oil slicks slow the car briefly.</li>
-        <li>Speed and spawn rates increase over time.</li>
-      </ul>
-    </details>
-    <details style="margin-top:8px" open>
       <summary><b>Facts represented</b></summary>
       <ul>
-        <li>Solar input increases available energy.</li>
-        <li>Obstructions reduce effective energy.</li>
-        <li>Rolling resistance reduces speed efficiency.</li>
+        <li><b>Solar irradiance:</b> Higher sunlight boosts PV power.</li>
+        <li><b>Cloud attenuation:</b> Clouds reduce irradiance via scattering and absorption.</li>
+        <li><b>Energy balance:</b> Battery state rises with input, falls with load demand.</li>
+        <li><b>Velocity drag:</b> Aerodynamic losses grow with v², power ∝ v³.</li>
+        <li><b>Frictional losses:</b> Slick surfaces lower traction and efficiency.</li>
       </ul>
     </details>
   </aside>
+
   <main>
-    <canvas id="game" width="900" height="480" aria-label="Solar Dash game"></canvas>
+    <canvas id="game" width="900" height="480"></canvas>
   </main>
 </div>
+
 <script>
 (function(){
-  const cvs=document.getElementById('game');
-  const ctx=cvs.getContext('2d');
-  const UI={score:document.getElementById('kScore'),best:document.getElementById('kBest'),speed:document.getElementById('kSpeed'),bat:document.getElementById('batteryFill')};
-  const W=cvs.width, H=cvs.height;
-  let running=false, paused=false, last=0, t=0, score=0, best=+localStorage.getItem('solar_best')||0;
-  UI.best.textContent=best;
-
-  const player={x:W*0.2,y:H*0.5,w:36,h:24,vx:0,vy:0,speed:260,color:'#0ea5e9',slowTimer:0};
-  let battery=60; // 0..100
-
-  const suns=[], clouds=[], oils=[], particles=[];
-  function spawnSun(){
-    const r=10+Math.random()*6; suns.push({x:W+20,y:30+Math.random()*(H-120),r, vx:- (80+Math.random()*70)});
-  }
-  function spawnCloud(){
-    const r=22+Math.random()*26; clouds.push({x:W+40,y:20+Math.random()*(H-160),r, vx:- (60+Math.random()*60)});
-  }
-  function spawnOil(){
-    const r=12+Math.random()*10; oils.push({x:W+20,y:H-120+Math.random()*60,r, vx:- (120+Math.random()*80)});
-  }
-  function burst(x,y,color){
-    for(let i=0;i<14;i++){
-      const a=Math.random()*Math.PI*2; const s=60+Math.random()*120;
-      particles.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,life:0.6,age:0,color});
-    }
-  }
-
-  let spawnTimers={sun:0,cloud:0,oil:0};
-  function reset(){
-    running=false; paused=false; last=0; t=0; score=0; battery=60; UI.score.textContent=0; UI.speed.textContent='1.0x';
-    player.x=W*0.2; player.y=H*0.5; player.vx=0; player.vy=0; player.slowTimer=0;
-    suns.length=0; clouds.length=0; oils.length=0; particles.length=0; spawnTimers={sun:0,cloud:0,oil:0};
-    draw(0);
-  }
-
-  function start(){ if(!running){ running=true; paused=false; last=performance.now(); requestAnimationFrame(loop);} }
-  function pause(){ paused=!paused; if(!paused){ last=performance.now(); requestAnimationFrame(loop);} }
-
-  function speedFactor(){ return 1 + Math.min(2, t/60 * 0.25); } // ramps from 1x to ~2.5x by 10 mins
-
-  const keys={};
-  window.addEventListener('keydown',e=>{ keys[e.key.toLowerCase()]=true; if(['arrowup','arrowdown','arrowleft','arrowright',' '].includes(e.key.toLowerCase())) e.preventDefault(); });
-  window.addEventListener('keyup',e=>{ keys[e.key.toLowerCase()]=false; });
-
-  // touch control: drag to position
-  let touch=null;
-  cvs.addEventListener('pointerdown',e=>{ touch={id:e.pointerId}; cvs.setPointerCapture(e.pointerId); });
-  cvs.addEventListener('pointermove',e=>{ if(touch){ const rect=cvs.getBoundingClientRect(); player.x=(e.clientX-rect.left)/rect.width*W; player.y=(e.clientY-rect.top)/rect.height*H; }});
-  cvs.addEventListener('pointerup',()=>{ touch=null; });
-
-  function loop(ts){
-    if(!running||paused) return;
-    const dt=(ts-last)/1000; last=ts; t+=dt; update(dt); draw(dt); requestAnimationFrame(loop);
-  }
-
-  function update(dt){
-    const spd = player.slowTimer>0 ? player.speed*0.5 : player.speed;
-    const s = spd*dt;
-    // keyboard
-    player.vx = (keys['arrowright']||keys['d']?1:0) - (keys['arrowleft']||keys['a']?1:0);
-    player.vy = (keys['arrowdown']||keys['s']?1:0) - (keys['arrowup']||keys['w']?1:0);
-    player.x += player.vx * s;
-    player.y += player.vy * s;
-    // clamp
-    player.x=Math.max(16,Math.min(W-16,player.x));
-    player.y=Math.max(20,Math.min(H-20,player.y));
-
-    // spawns scale with time
-    const f = speedFactor();
-    UI.speed.textContent=f.toFixed(1)+'x';
-    spawnTimers.sun -= dt; spawnTimers.cloud -= dt; spawnTimers.oil -= dt;
-    if(spawnTimers.sun<=0){ spawnSun(); spawnTimers.sun= 0.8/f + Math.random()*0.4; }
-    if(spawnTimers.cloud<=0){ spawnCloud(); spawnTimers.cloud= 1.2/f + Math.random()*0.6; }
-    if(spawnTimers.oil<=0){ spawnOil(); spawnTimers.oil= 2.2/f + Math.random()*0.8; }
-
-    // move and cull
-    function step(list){ for(let i=list.length-1;i>=0;i--){ const o=list[i]; o.x += o.vx*dt*f; if(o.x<-70) list.splice(i,1);} }
-    step(suns); step(clouds); step(oils);
-
-    // particles
-    for(let i=particles.length-1;i>=0;i--){ const p=particles[i]; p.x+=p.vx*dt; p.y+=p.vy*dt; p.vx*=0.98; p.vy*=0.98; p.age+=dt; if(p.age>p.life) particles.splice(i,1); }
-
-    // collisions
-    function hitCircle(cx,cy,cr, rx,ry,rw,rh){ // rect-circle simple check
-      const dx=Math.max(rx-Math.min(rx+rw,cx), Math.max(cx-(rx+rw),0));
-      const dy=Math.max(ry-Math.min(ry+rh,cy), Math.max(cy-(ry+rh),0));
-      return (dx*dx+dy*dy) <= cr*cr;
-    }
-
-    const rect={x:player.x-18,y:player.y-12,w:36,h:24};
-
-    // suns
-    for(let i=suns.length-1;i>=0;i--){ const s=suns[i]; if(hitCircle(s.x,s.y,s.r,rect.x,rect.y,rect.w,rect.h)){ suns.splice(i,1); battery=Math.min(100,battery+8); score+=Math.round(10*f); burst(player.x,player.y,'#fde047'); }}
-    // clouds
-    for(let i=clouds.length-1;i>=0;i--){ const c=clouds[i]; if(hitCircle(c.x,c.y,c.r,rect.x,rect.y,rect.w,rect.h)){ battery=Math.max(0,battery-15*dt*3); }}
-    // oil
-    for(let i=oils.length-1;i>=0;i--){ const o=oils[i]; if(hitCircle(o.x,o.y,o.r,rect.x,rect.y,rect.w,rect.h)){ oils.splice(i,1); player.slowTimer=1.5; burst(player.x,player.y,'#1f2937'); }}
-
-    if(player.slowTimer>0) player.slowTimer-=dt;
-
-    // passive drain + scoring over time
-    battery = Math.max(0, battery - (0.9 + 0.1*f)*dt);
-    score += Math.floor(4*dt*f);
-
-    UI.score.textContent=score;
-    UI.bat.style.width=Math.max(0,Math.min(100,battery))+"%";
-
-    if(battery<=0){ gameOver(); }
-  }
-
-  function gameOver(){
-    running=false;
-    best=Math.max(best,score); localStorage.setItem('solar_best',best); UI.best.textContent=best;
-    draw(0,true);
-  }
-
-  function drawBackground(){
-    // sky gradient
-    const sky=ctx.createLinearGradient(0,0,0,H);
-    sky.addColorStop(0,'#bfe9ff');
-    sky.addColorStop(0.6,'#dff7ff');
-    sky.addColorStop(1,'#f7fcff');
-    ctx.fillStyle=sky; ctx.fillRect(0,0,W,H);
-    // sun disk
-    const sg=ctx.createRadialGradient(W*0.15, H*0.18, 10, W*0.15, H*0.18, 120);
-    sg.addColorStop(0,'rgba(255,255,200,0.9)'); sg.addColorStop(1,'rgba(255,255,200,0)');
-    ctx.fillStyle=sg; ctx.beginPath(); ctx.arc(W*0.15,H*0.18,120,0,Math.PI*2); ctx.fill();
-    // distant hills
-    ctx.fillStyle='#cfe7f9'; ctx.beginPath(); ctx.moveTo(0,H-170); for(let x=0;x<=W;x+=40){ const y=H-170+Math.sin((x+t*30)/160)*12; ctx.lineTo(x,y);} ctx.lineTo(W,H); ctx.lineTo(0,H); ctx.closePath(); ctx.fill();
-    // nearer hills
-    ctx.fillStyle='#b8dbf5'; ctx.beginPath(); ctx.moveTo(0,H-130); for(let x=0;x<=W;x+=40){ const y=H-130+Math.sin((x+t*60)/120)*18; ctx.lineTo(x,y);} ctx.lineTo(W,H); ctx.lineTo(0,H); ctx.closePath(); ctx.fill();
-    // ground + road
-    ctx.fillStyle='#eaf7ff'; ctx.fillRect(0,H-100,W,100);
-    ctx.fillStyle='#dbeafe'; ctx.fillRect(0,H-82,W,64);
-    // dashed lane markers
-    ctx.fillStyle='#c7d2fe'; const dashW=70, gap=50, speed=140; const offset = (t*speed)% (dashW+gap);
-    for(let x=-offset; x<W; x+=dashW+gap){ ctx.fillRect(x,H-51,dashW,3); }
-  }
-
-  function draw(dt,over=false){
-    ctx.clearRect(0,0,W,H);
-    drawBackground();
-
-    // obstacles
-    // clouds (soft multi-lobes with shadow)
-    clouds.forEach(c=>{
-      ctx.save();
-      ctx.shadowColor='rgba(0,0,0,0.08)'; ctx.shadowBlur=12; ctx.shadowOffsetY=4;
-      ctx.fillStyle='rgba(180,200,220,0.95)';
-      ctx.beginPath(); ctx.arc(c.x,c.y,c.r,0,Math.PI*2); ctx.arc(c.x+c.r*0.7,c.y+3,c.r*0.8,0,Math.PI*2); ctx.arc(c.x-c.r*0.6,c.y+6,c.r*0.7,0,Math.PI*2); ctx.fill();
-      ctx.restore();
-    });
-    // suns (glow + rotating rays)
-    suns.forEach(s=>{
-      const g=ctx.createRadialGradient(s.x-2,s.y-2,2,s.x,s.y,s.r);
-      g.addColorStop(0,'#fffbe6'); g.addColorStop(1,'#facc15');
-      ctx.fillStyle=g; ctx.beginPath(); ctx.arc(s.x,s.y,s.r,0,Math.PI*2); ctx.fill();
-      ctx.save(); ctx.translate(s.x,s.y); ctx.rotate(t*2);
-      ctx.strokeStyle='rgba(250,204,21,0.7)'; ctx.lineWidth=2;
-      for(let i=0;i<8;i++){ ctx.rotate(Math.PI/4); ctx.beginPath(); ctx.moveTo(s.r+2,0); ctx.lineTo(s.r+10,0); ctx.stroke(); }
-      ctx.restore();
-    });
-    // oils
-    oils.forEach(o=>{ ctx.fillStyle='#1f2937'; ctx.beginPath(); ctx.ellipse(o.x,o.y,o.r*1.6,o.r*0.8,0,0,Math.PI*2); ctx.fill(); });
-
-    // player car with shadow and highlights
-    ctx.save();
-    // shadow
-    ctx.fillStyle='rgba(0,0,0,0.15)'; ctx.beginPath(); ctx.ellipse(player.x,player.y+12,22,8,0,0,Math.PI*2); ctx.fill();
-    // body
-    ctx.translate(player.x,player.y);
-    const bodyColor = player.slowTimer>0?'#9ca3af':player.color;
-    roundRect(ctx,-18,-12,36,24,8,true,false,bodyColor);
-    // panel glass
-    ctx.fillStyle='#0ea5e9'; roundRect(ctx,-14,-9,28,12,4,true,false);
-    // grid lines
-    ctx.strokeStyle='#e0f2fe'; ctx.lineWidth=1; for(let i=-12;i<=12;i+=6){ ctx.beginPath(); ctx.moveTo(i,-9); ctx.lineTo(i,3); ctx.stroke(); }
-    for(let j=-7;j<=9;j+=6){ ctx.beginPath(); ctx.moveTo(-14,j); ctx.lineTo(14,j); ctx.stroke(); }
-    // highlight
-    const hl=ctx.createLinearGradient(-18,-12,18,12); hl.addColorStop(0,'rgba(255,255,255,0.0)'); hl.addColorStop(1,'rgba(255,255,255,0.25)');
-    ctx.fillStyle=hl; roundRect(ctx,-18,-12,36,24,8,true,false);
-    ctx.restore();
-
-    // particles
-    particles.forEach(p=>{ const a=1-p.age/p.life; ctx.fillStyle=p.color.replace(')',','+a+')').replace('rgb','rgba'); ctx.beginPath(); ctx.arc(p.x,p.y,2.2,0,Math.PI*2); ctx.fill(); });
-
-    // HUD overlay
-    if(over){
-      ctx.fillStyle='rgba(0,0,0,0.45)'; ctx.fillRect(0,0,W,H);
-      ctx.fillStyle='#fff'; ctx.font='28px system-ui'; ctx.fillText('Game Over', W/2-80, H/2-20);
-      ctx.font='16px system-ui'; ctx.fillText('Score: '+score, W/2-45, H/2+8);
-      ctx.fillText('Best: '+best, W/2-40, H/2+28);
-      ctx.fillText('Press Restart to play again', W/2-120, H/2+56);
-    }
-  }
-
-  function roundRect(ctx,x,y,w,h,r,fill,stroke,color){
-    if (w<2*r) r=w/2; if (h<2*r) r=h/2; ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r); ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); if(fill){ ctx.fillStyle=color||ctx.fillStyle; ctx.fill(); } if(stroke) ctx.stroke();
-  }
-
-  // wire buttons
-  document.getElementById('btnStart').onclick=()=>start();
-  document.getElementById('btnPause').onclick=()=>pause();
-  document.getElementById('btnRestart').onclick=()=>{ reset(); start(); };
-
-  // first frame
-  reset();
+const cvs=document.getElementById('game'),ctx=cvs.getContext('2d');
+const UI={score:document.getElementById('kScore'),best:document.getElementById('kBest'),
+speed:document.getElementById('kSpeed'),bat:document.getElementById('batteryFill')};
+const W=cvs.width,H=cvs.height;
+let running=false,paused=false,last=0,t=0,score=0,best=+localStorage.getItem('solar_best')||0;UI.best.textContent=best;
+const player={x:W*0.2,y:H*0.5,w:36,h:24,speed:260,color:'#0ea5e9',slowTimer:0};
+let battery=60,suns=[],clouds=[],oils=[],particles=[],spawnTimers={sun:0,cloud:0,oil:0};
+function spawnSun(){const r=10+Math.random()*6;suns.push({x:W+20,y:30+Math.random()*(H-120),r,vx:-100-Math.random()*60});}
+function spawnCloud(){const r=22+Math.random()*26;clouds.push({x:W+40,y:20+Math.random()*(H-160),r,vx:-80-Math.random()*60});}
+function spawnOil(){const r=12+Math.random()*10;oils.push({x:W+20,y:H-120+Math.random()*60,r,vx:-120-Math.random()*80});}
+function burst(x,y,color){for(let i=0;i<10;i++){const a=Math.random()*6.28;particles.push({x,y,vx:Math.cos(a)*120,vy:Math.sin(a)*120,life:.6,age:0,color});}}
+function reset(){running=false;paused=false;last=0;t=0;score=0;battery=60;suns=[];clouds=[];oils=[];particles=[];spawnTimers={sun:0,cloud:0,oil:0};draw();}
+function start(){if(!running){running=true;paused=false;last=performance.now();requestAnimationFrame(loop);}}
+function pause(){paused=!paused;if(!paused){last=performance.now();requestAnimationFrame(loop);}}
+function speedFactor(){return 1+Math.min(2,t/60*.25);}
+const keys={};window.onkeydown=e=>keys[e.key.toLowerCase()]=true;window.onkeyup=e=>keys[e.key.toLowerCase()]=false;
+let touch=null;cvs.onpointerdown=e=>{touch={id:e.pointerId};cvs.setPointerCapture(e.pointerId);}
+cvs.onpointermove=e=>{if(touch){const r=cvs.getBoundingClientRect();player.x=(e.clientX-r.left)/r.width*W;player.y=(e.clientY-r.top)/r.height*H;}}
+cvs.onpointerup=()=>touch=null;
+function loop(ts){if(!running||paused)return;const dt=(ts-last)/1e3;last=ts;t+=dt;update(dt);draw();requestAnimationFrame(loop);}
+function update(dt){const f=speedFactor();UI.speed.textContent=f.toFixed(1)+'x';const spd=player.slowTimer>0?player.speed*0.5:player.speed;
+player.x+=((keys['arrowright']||keys['d'])-(keys['arrowleft']||keys['a']))*spd*dt;
+player.y+=((keys['arrowdown']||keys['s'])-(keys['arrowup']||keys['w']))*spd*dt;
+player.x=Math.max(16,Math.min(W-16,player.x));player.y=Math.max(20,Math.min(H-20,player.y));
+spawnTimers.sun-=dt;spawnTimers.cloud-=dt;spawnTimers.oil-=dt;
+if(spawnTimers.sun<=0){spawnSun();spawnTimers.sun=.8/f+.4*Math.random();}
+if(spawnTimers.cloud<=0){spawnCloud();spawnTimers.cloud=1.2/f+.6*Math.random();}
+if(spawnTimers.oil<=0){spawnOil();spawnTimers.oil=2.2/f+.8*Math.random();}
+[suns,clouds,oils].forEach(list=>{for(let i=list.length-1;i>=0;i--){list[i].x+=list[i].vx*dt*f;if(list[i].x<-70)list.splice(i,1);}});
+for(let i=particles.length-1;i>=0;i--){const p=particles[i];p.x+=p.vx*dt;p.y+=p.vy*dt;p.vx*=.98;p.vy*=.98;p.age+=dt;if(p.age>p.life)particles.splice(i,1);}
+function hit(cx,cy,cr){return Math.abs(cx-player.x)<cr+18&&Math.abs(cy-player.y)<cr+12;}
+suns=suns.filter(s=>{if(hit(s.x,s.y,s.r)){battery=Math.min(100,battery+8);score+=10;burst(player.x,player.y,'#fde047');return false;}return true;});
+clouds.forEach(c=>{if(hit(c.x,c.y,c.r))battery=Math.max(0,battery-15*dt*3);});
+oils=oils.filter(o=>{if(hit(o.x,o.y,o.r)){player.slowTimer=1.5;burst(player.x,player.y,'#1f2937');return false;}return true;});
+if(player.slowTimer>0)player.slowTimer-=dt;battery=Math.max(0,battery-(1+.1*f)*dt);score+=Math.floor(4*dt*f);
+UI.score.textContent=score;UI.bat.style.width=battery+'%';if(battery<=0){running=false;if(score>best){best=score;localStorage.setItem('solar_best',best);}UI.best.textContent=best;}}
+function draw(){ctx.clearRect(0,0,W,H);const sky=ctx.createLinearGradient(0,0,0,H);sky.addColorStop(0,'#bfe9ff');sky.addColorStop(1,'#f7fcff');ctx.fillStyle=sky;ctx.fillRect(0,0,W,H);
+ctx.fillStyle='#b8dbf5';ctx.fillRect(0,H-100,W,100);
+clouds.forEach(c=>{ctx.fillStyle='rgba(200,220,240,.9)';ctx.beginPath();ctx.arc(c.x,c.y,c.r,0,6.28);ctx.fill();});
+suns.forEach(s=>{const g=ctx.createRadialGradient(s.x,s.y,2,s.x,s.y,s.r);g.addColorStop(0,'#fffbe6');g.addColorStop(1,'#facc15');ctx.fillStyle=g;ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,6.28);ctx.fill();});
+oils.forEach(o=>{ctx.fillStyle='#1f2937';ctx.beginPath();ctx.ellipse(o.x,o.y,o.r*1.6,o.r*.8,0,0,6.28);ctx.fill();});
+ctx.save();ctx.translate(player.x,player.y);ctx.fillStyle=player.slowTimer>0?'#9ca3af':'#0ea5e9';ctx.beginPath();ctx.roundRect(-18,-12,36,24,8);ctx.fill();ctx.restore();
+particles.forEach(p=>{ctx.globalAlpha=1-p.age/p.life;ctx.fillStyle=p.color;ctx.beginPath();ctx.arc(p.x,p.y,2,0,6.28);ctx.fill();ctx.globalAlpha=1;});}
+document.getElementById('btnStart').onclick=start;
+document.getElementById('btnPause').onclick=pause;
+document.getElementById('btnRestart').onclick=()=>{reset();start();};
+reset();
 })();
 </script>
 </body>
 </html>
-
