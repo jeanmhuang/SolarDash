@@ -5,39 +5,119 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Solar Dash ☀️</title>
 
-<!-- Open Graph meta for LinkedIn / social preview -->
+<!-- Open Graph for LinkedIn preview -->
 <meta property="og:title" content="Solar Dash — Solar-Powered Arcade Game" />
 <meta property="og:description" content="Collect sunlight, dodge clouds, and keep your energy up in this climate-inspired mini game." />
-<meta property="og:image" content="https://github.com/jeanmhuang/SolarDash/blob/main/thumbnail.png?raw=true" />
+<meta property="og:image" content="https://raw.githubusercontent.com/jeanmhuang/SolarDash/main/thumbnail.png" />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://jeanmhuang.github.io/SolarDash/" />
 
 <style>
-  :root{--bg:#f4fbff;--fg:#0b1020;--panel:#fff;--accent:#22c55e;--warn:#f59e0b}
+  :root {
+    --bg:#f4fbff; --fg:#0b1020; --panel:#fff;
+    --accent:#22c55e; --warn:#f59e0b;
+  }
   *{box-sizing:border-box}
-  body{margin:0;background:linear-gradient(180deg,#e0f7ff,#f8fcff);font-family:system-ui,Segoe UI,Roboto,Inter,Helvetica,Arial;color:var(--fg)}
-  header{display:flex;align-items:center;gap:10px;padding:10px 14px;background:#fff;border-bottom:1px solid #dbeafe;position:sticky;top:0;z-index:10}
-  header h1{font-size:20px;margin:0}
-  .wrap{display:grid;grid-template-columns:280px 1fr;gap:14px;padding:12px}
-  aside{background:var(--panel);border:1px solid #dbeafe;border-radius:12px;padding:12px;box-shadow:0 6px 16px rgba(0,0,0,.05)}
-  main{background:var(--panel);border:1px solid #dbeafe;border-radius:12px;padding:12px;box-shadow:0 6px 16px rgba(0,0,0,.05)}
-  canvas{width:100%;max-width:900px;height:480px;border-radius:12px;border:1px solid #e5eef7;background:#bfe9ff;display:block}
-  .kpi{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
-  .pill{background:#f1f7ff;border:1px solid #e1ecfb;padding:6px 10px;border-radius:999px;font-size:13px}
-  .bar{height:12px;background:#ecf3ff;border-radius:999px;overflow:hidden}
-  .fill{height:100%;background:linear-gradient(90deg,#fde047,#f59e0b);transition:width .2s ease-out}
-  .btn{background:#0ea5e9;color:#fff;border:0;border-radius:10px;padding:9px 12px;cursor:pointer}
-  .btn.alt{background:#22c55e}
-  .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-  ul{margin:8px 0 0 18px}
-  li{margin:2px 0}
+  body {
+    margin:0;
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, Inter, Helvetica, Arial;
+    color:var(--fg);
+    background:linear-gradient(180deg,#e0f7ff,#f8fcff);
+  }
+  header {
+    display:flex; flex-wrap:wrap; align-items:center; gap:10px;
+    padding:10px 14px; background:#fff;
+    border-bottom:1px solid #dbeafe; position:sticky; top:0; z-index:10;
+  }
+  header h1 { font-size:22px; margin:0; flex:1; }
+  header div.desc { font-size:14px; color:#475569; flex-basis:100%; }
+
+  .wrap {
+    display:grid;
+    grid-template-columns: minmax(250px,300px) 1fr;
+    gap:14px;
+    padding:12px;
+  }
+  aside, main {
+    background:var(--panel);
+    border:1px solid #dbeafe;
+    border-radius:12px;
+    padding:12px;
+    box-shadow:0 6px 16px rgba(0,0,0,.05);
+  }
+
+  canvas {
+    width:100%;
+    max-width:900px;
+    height:auto;
+    aspect-ratio:16/9;
+    border-radius:12px;
+    border:1px solid #e5eef7;
+    background:#bfe9ff;
+    display:block;
+    touch-action:none;
+  }
+
+  .kpi {
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin:8px 0;
+  }
+  .pill {
+    background:#f1f7ff;
+    border:1px solid #e1ecfb;
+    padding:6px 10px;
+    border-radius:999px;
+    font-size:14px;
+  }
+  .bar {
+    height:14px; background:#ecf3ff;
+    border-radius:999px; overflow:hidden;
+  }
+  .fill {
+    height:100%;
+    background:linear-gradient(90deg,#fde047,#f59e0b);
+    transition:width .2s ease-out;
+  }
+  .btn {
+    background:#0ea5e9;
+    color:#fff;
+    border:0;
+    border-radius:10px;
+    padding:10px 14px;
+    cursor:pointer;
+    font-size:15px;
+  }
+  .btn.alt { background:#22c55e; }
+  .row {
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-top:10px;
+  }
+  details { margin-top:10px; font-size:14px; }
+  summary { cursor:pointer; font-weight:600; }
+
+  /* --- MOBILE --- */
+  @media (max-width:768px){
+    .wrap {
+      grid-template-columns: 1fr;
+    }
+    aside { order:2; }
+    main { order:1; }
+    header h1 { font-size:20px; }
+    .btn { flex:1; font-size:16px; padding:12px 0; }
+    .pill { font-size:15px; }
+    summary { font-size:16px; }
+  }
 </style>
 </head>
 <body>
 
 <header>
   <h1>☀️ Solar Dash</h1>
-  <div>Collect suns, avoid clouds, and keep your battery charged!</div>
+  <div class="desc">Collect suns, avoid clouds, and keep your battery charged!</div>
 </header>
 
 <div class="wrap">
@@ -51,19 +131,19 @@
       <div>Battery</div>
       <div class="bar"><div id="batteryFill" class="fill" style="width:60%"></div></div>
     </div>
-    <div style="margin-top:10px" class="row">
+    <div class="row">
       <button id="btnStart" class="btn alt">Start</button>
       <button id="btnPause" class="btn">Pause</button>
       <button id="btnRestart" class="btn">Restart</button>
     </div>
-    <details style="margin-top:10px" open>
-      <summary><b>Facts represented</b></summary>
+    <details open>
+      <summary>Facts represented</summary>
       <ul>
-        <li><b>Solar irradiance:</b> Higher sunlight boosts PV power.</li>
-        <li><b>Cloud attenuation:</b> Clouds reduce irradiance via scattering and absorption.</li>
-        <li><b>Energy balance:</b> Battery state rises with input, falls with load demand.</li>
-        <li><b>Velocity drag:</b> Aerodynamic losses grow with v², power ∝ v³.</li>
-        <li><b>Frictional losses:</b> Slick surfaces lower traction and efficiency.</li>
+        <li><b>Solar irradiance:</b> More sunlight = more PV power.</li>
+        <li><b>Cloud attenuation:</b> Clouds scatter & absorb light, lowering input.</li>
+        <li><b>Energy balance:</b> Battery rises with input, falls with load demand.</li>
+        <li><b>Velocity drag:</b> Aerodynamic losses ∝ v², power ∝ v³.</li>
+        <li><b>Frictional losses:</b> Slick surfaces cut traction & efficiency.</li>
       </ul>
     </details>
   </aside>
@@ -73,56 +153,6 @@
   </main>
 </div>
 
-<script>
-(function(){
-const cvs=document.getElementById('game'),ctx=cvs.getContext('2d');
-const UI={score:document.getElementById('kScore'),best:document.getElementById('kBest'),
-speed:document.getElementById('kSpeed'),bat:document.getElementById('batteryFill')};
-const W=cvs.width,H=cvs.height;
-let running=false,paused=false,last=0,t=0,score=0,best=+localStorage.getItem('solar_best')||0;UI.best.textContent=best;
-const player={x:W*0.2,y:H*0.5,w:36,h:24,speed:260,color:'#0ea5e9',slowTimer:0};
-let battery=60,suns=[],clouds=[],oils=[],particles=[],spawnTimers={sun:0,cloud:0,oil:0};
-function spawnSun(){const r=10+Math.random()*6;suns.push({x:W+20,y:30+Math.random()*(H-120),r,vx:-100-Math.random()*60});}
-function spawnCloud(){const r=22+Math.random()*26;clouds.push({x:W+40,y:20+Math.random()*(H-160),r,vx:-80-Math.random()*60});}
-function spawnOil(){const r=12+Math.random()*10;oils.push({x:W+20,y:H-120+Math.random()*60,r,vx:-120-Math.random()*80});}
-function burst(x,y,color){for(let i=0;i<10;i++){const a=Math.random()*6.28;particles.push({x,y,vx:Math.cos(a)*120,vy:Math.sin(a)*120,life:.6,age:0,color});}}
-function reset(){running=false;paused=false;last=0;t=0;score=0;battery=60;suns=[];clouds=[];oils=[];particles=[];spawnTimers={sun:0,cloud:0,oil:0};draw();}
-function start(){if(!running){running=true;paused=false;last=performance.now();requestAnimationFrame(loop);}}
-function pause(){paused=!paused;if(!paused){last=performance.now();requestAnimationFrame(loop);}}
-function speedFactor(){return 1+Math.min(2,t/60*.25);}
-const keys={};window.onkeydown=e=>keys[e.key.toLowerCase()]=true;window.onkeyup=e=>keys[e.key.toLowerCase()]=false;
-let touch=null;cvs.onpointerdown=e=>{touch={id:e.pointerId};cvs.setPointerCapture(e.pointerId);}
-cvs.onpointermove=e=>{if(touch){const r=cvs.getBoundingClientRect();player.x=(e.clientX-r.left)/r.width*W;player.y=(e.clientY-r.top)/r.height*H;}}
-cvs.onpointerup=()=>touch=null;
-function loop(ts){if(!running||paused)return;const dt=(ts-last)/1e3;last=ts;t+=dt;update(dt);draw();requestAnimationFrame(loop);}
-function update(dt){const f=speedFactor();UI.speed.textContent=f.toFixed(1)+'x';const spd=player.slowTimer>0?player.speed*0.5:player.speed;
-player.x+=((keys['arrowright']||keys['d'])-(keys['arrowleft']||keys['a']))*spd*dt;
-player.y+=((keys['arrowdown']||keys['s'])-(keys['arrowup']||keys['w']))*spd*dt;
-player.x=Math.max(16,Math.min(W-16,player.x));player.y=Math.max(20,Math.min(H-20,player.y));
-spawnTimers.sun-=dt;spawnTimers.cloud-=dt;spawnTimers.oil-=dt;
-if(spawnTimers.sun<=0){spawnSun();spawnTimers.sun=.8/f+.4*Math.random();}
-if(spawnTimers.cloud<=0){spawnCloud();spawnTimers.cloud=1.2/f+.6*Math.random();}
-if(spawnTimers.oil<=0){spawnOil();spawnTimers.oil=2.2/f+.8*Math.random();}
-[suns,clouds,oils].forEach(list=>{for(let i=list.length-1;i>=0;i--){list[i].x+=list[i].vx*dt*f;if(list[i].x<-70)list.splice(i,1);}});
-for(let i=particles.length-1;i>=0;i--){const p=particles[i];p.x+=p.vx*dt;p.y+=p.vy*dt;p.vx*=.98;p.vy*=.98;p.age+=dt;if(p.age>p.life)particles.splice(i,1);}
-function hit(cx,cy,cr){return Math.abs(cx-player.x)<cr+18&&Math.abs(cy-player.y)<cr+12;}
-suns=suns.filter(s=>{if(hit(s.x,s.y,s.r)){battery=Math.min(100,battery+8);score+=10;burst(player.x,player.y,'#fde047');return false;}return true;});
-clouds.forEach(c=>{if(hit(c.x,c.y,c.r))battery=Math.max(0,battery-15*dt*3);});
-oils=oils.filter(o=>{if(hit(o.x,o.y,o.r)){player.slowTimer=1.5;burst(player.x,player.y,'#1f2937');return false;}return true;});
-if(player.slowTimer>0)player.slowTimer-=dt;battery=Math.max(0,battery-(1+.1*f)*dt);score+=Math.floor(4*dt*f);
-UI.score.textContent=score;UI.bat.style.width=battery+'%';if(battery<=0){running=false;if(score>best){best=score;localStorage.setItem('solar_best',best);}UI.best.textContent=best;}}
-function draw(){ctx.clearRect(0,0,W,H);const sky=ctx.createLinearGradient(0,0,0,H);sky.addColorStop(0,'#bfe9ff');sky.addColorStop(1,'#f7fcff');ctx.fillStyle=sky;ctx.fillRect(0,0,W,H);
-ctx.fillStyle='#b8dbf5';ctx.fillRect(0,H-100,W,100);
-clouds.forEach(c=>{ctx.fillStyle='rgba(200,220,240,.9)';ctx.beginPath();ctx.arc(c.x,c.y,c.r,0,6.28);ctx.fill();});
-suns.forEach(s=>{const g=ctx.createRadialGradient(s.x,s.y,2,s.x,s.y,s.r);g.addColorStop(0,'#fffbe6');g.addColorStop(1,'#facc15');ctx.fillStyle=g;ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,6.28);ctx.fill();});
-oils.forEach(o=>{ctx.fillStyle='#1f2937';ctx.beginPath();ctx.ellipse(o.x,o.y,o.r*1.6,o.r*.8,0,0,6.28);ctx.fill();});
-ctx.save();ctx.translate(player.x,player.y);ctx.fillStyle=player.slowTimer>0?'#9ca3af':'#0ea5e9';ctx.beginPath();ctx.roundRect(-18,-12,36,24,8);ctx.fill();ctx.restore();
-particles.forEach(p=>{ctx.globalAlpha=1-p.age/p.life;ctx.fillStyle=p.color;ctx.beginPath();ctx.arc(p.x,p.y,2,0,6.28);ctx.fill();ctx.globalAlpha=1;});}
-document.getElementById('btnStart').onclick=start;
-document.getElementById('btnPause').onclick=pause;
-document.getElementById('btnRestart').onclick=()=>{reset();start();};
-reset();
-})();
-</script>
+<script src="game.js"></script>
 </body>
 </html>
